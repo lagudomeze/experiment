@@ -1,5 +1,6 @@
 package com.phi.material.controller;
 
+import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,7 @@ public class MaterialManagerController {
     }
 
     @PostMapping()
-    public MaterialUploadResult upload() {
+    public List<MaterialUploadResult> list() {
         throw new RuntimeException();
     }
 }
