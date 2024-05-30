@@ -1,12 +1,15 @@
 package com.phi.material.controller;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.phi.material.service.VideoSlices;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +58,20 @@ public class MaterialController {
 
     @PostMapping("/materials:search")
     public SearchResponse search(@RequestBody SearchCondition condition) {
+        throw new RuntimeException();
+    }
+
+
+    public record DetailResponse(
+            @JsonUnwrapped
+            MaterialVo vo,
+            VideoSlices slices
+    ) {
+
+    }
+
+    @GetMapping("/materials/{id}")
+    public DetailResponse detail(@PathVariable String id) {
         throw new RuntimeException();
     }
 
