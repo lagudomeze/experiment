@@ -11,6 +11,9 @@ spring:
           github:
             client-id: Ov23liT2qfXbByb1kPSL
             client-secret: ${SECRET}
+            scope:
+              - read:user
+              - read:email
 
 springdoc:
   use-management-port: off

@@ -1,4 +1,4 @@
-package com.phi.material.auth.config;
+package com.phi.auth.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,16 +30,15 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/actuator/**",
                                 "/manager/**",
-                                "/api/v1/materials/video",
                                 "/error"
                         )
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                // /oauth2/authorization/github 可以直接跳转到github
                 .oauth2Login(Customizer.withDefaults());
 
         return http.build();
