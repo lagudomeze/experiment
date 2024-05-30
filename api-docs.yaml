@@ -1,0 +1,194 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/materials:search:
+    post:
+      tags:
+      - material-controller
+      operationId: search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchCondition"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+  /api/v1/materials/video:
+    post:
+      tags:
+      - material-controller
+      operationId: upload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - description
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                description:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                anyOf:
+                - $ref: "#/components/schemas/MaterialUploadEvent"
+  /api/v1/materials/{id}:
+    get:
+      tags:
+      - material-controller
+      operationId: detail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DetailResponse"
+  /:
+    get:
+      tags:
+      - welcome-controller
+      operationId: test
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /login:
+    post:
+      tags:
+      - login-endpoint
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+components:
+  schemas:
+    SearchCondition:
+      required:
+      - pageNo
+      - pageSize
+      type: object
+      properties:
+        tags:
+          type: array
+          description: 标签分组，不穿表示无限制
+          items:
+            type: string
+            description: 标签分组，不穿表示无限制
+        pageNo:
+          type: integer
+          format: int64
+        pageSize:
+          type: integer
+          format: int64
+        query:
+          type: string
+          description: "描述的检索词, 暂时不做复杂分词检索，只做前后缀匹配. 不传表示无限制"
+    MaterialVideo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        raw:
+          type: string
+        thumbnail:
+          type: string
+        description:
+          type: string
+    MaterialVo:
+      type: object
+      properties:
+        video:
+          $ref: "#/components/schemas/MaterialVideo"
+    SearchResponse:
+      required:
+      - pageNo
+      - pageSize
+      - records
+      - totalPage
+      - totalRecords
+      type: object
+      properties:
+        pageNo:
+          type: integer
+          format: int64
+        pageSize:
+          type: integer
+          format: int64
+        totalPage:
+          type: integer
+          format: int64
+        totalRecords:
+          type: integer
+          format: int64
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/MaterialVo"
+    MaterialUploadEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        progress:
+          type: integer
+          format: int32
+    DetailResponse:
+      type: object
+      properties:
+        video:
+          $ref: "#/components/schemas/MaterialVideo"
+        slices:
+          $ref: "#/components/schemas/VideoSlices"
+    VideoSlices:
+      type: object
+      properties:
+        url:
+          type: array
+          items:
+            type: string

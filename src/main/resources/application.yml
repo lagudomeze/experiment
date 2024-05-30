@@ -25,6 +25,7 @@ springdoc:
     path: "/manager/swagger-ui.html"
     config-url: "/manager/v3/api-docs/swagger-config"
     url: "/manager/v3/api-docs"
+  show-login-endpoint: on
 
 
 
