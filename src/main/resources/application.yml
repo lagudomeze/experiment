@@ -13,11 +13,17 @@ spring:
       client:
         registration:
           github:
+            redirect-uri:
             client-id: Ov23liT2qfXbByb1kPSL
             client-secret: ${SECRET}
             scope:
               - read:user
               - read:email
+phi:
+  storage:
+    choose: local
+    local:
+      base-dir: ${LOCAL_BASE_DIR:./}
 
 springdoc:
   api-docs:
@@ -41,7 +47,3 @@ management:
         include: "*"
 
 debug: off
-server:
-  servlet:
-    session:
-      tracking-modes: cookie
