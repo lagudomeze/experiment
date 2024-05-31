@@ -5,24 +5,18 @@ spring:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:${DB_FILE:app.db}
   security:
+    user:
+      name: test
+      password: 123456
     oauth2:
       client:
         registration:
           github:
-            redirect-uri: "{baseUrl}/welcome"
             client-id: Ov23liT2qfXbByb1kPSL
             client-secret: ${SECRET}
             scope:
               - read:user
               - read:email
-    jwt:
-      jwt-key: ${JWT_PRIVATE_KEY:./jwt_key}
-      key-id: ${JWT_KEY_ID:good_luck}
-      issuer: ${JWT_ISSUER:happy}
-      audience: ${JWT_AUDIENCE:happy}
-      expiration: ${JWT_TOKEN_EXPIRATION:2h}
-      # 临近超时时间10分钟内，会返回新的token
-      refresh-interval: ${JWT_TOKEN_REFRESH_INTERVAL:10m}
 
 springdoc:
   api-docs:
@@ -46,3 +40,7 @@ management:
         include: "*"
 
 debug: off
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
