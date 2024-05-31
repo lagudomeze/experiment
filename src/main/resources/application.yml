@@ -13,7 +13,6 @@ spring:
       client:
         registration:
           github:
-            redirect-uri:
             client-id: Ov23liT2qfXbByb1kPSL
             client-secret: ${SECRET}
             scope:
