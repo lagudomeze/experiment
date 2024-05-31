@@ -9,14 +9,22 @@ spring:
       client:
         registration:
           github:
+            redirect-uri: "{baseUrl}/welcome"
             client-id: Ov23liT2qfXbByb1kPSL
             client-secret: ${SECRET}
             scope:
               - read:user
               - read:email
+    jwt:
+      jwt-key: ${JWT_PRIVATE_KEY:./jwt_key}
+      key-id: ${JWT_KEY_ID:good_luck}
+      issuer: ${JWT_ISSUER:happy}
+      audience: ${JWT_AUDIENCE:happy}
+      expiration: ${JWT_TOKEN_EXPIRATION:2h}
+      # 临近超时时间10分钟内，会返回新的token
+      refresh-interval: ${JWT_TOKEN_REFRESH_INTERVAL:10m}
 
 springdoc:
-  use-management-port: off
   api-docs:
     path: "/manager/v3/api-docs"
   webjars:
@@ -26,8 +34,6 @@ springdoc:
     config-url: "/manager/v3/api-docs/swagger-config"
     url: "/manager/v3/api-docs"
   show-login-endpoint: on
-
-
 
 logging:
   level:

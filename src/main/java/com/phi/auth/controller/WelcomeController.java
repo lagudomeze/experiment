@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WelcomeController {
 
-    @GetMapping("/")
+    @GetMapping("/welcome")
     public String test() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("{}", authentication);

@@ -1,5 +1,6 @@
 package com.phi.material.controller;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.phi.material.service.VideoSlices;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,6 +38,10 @@ public class MaterialController {
             @Schema(requiredMode = RequiredMode.REQUIRED)
             long totalRecords) {
 
+        @JsonCreator
+        public PageResult(long pageNo, long pageSize, long totalPage, long totalRecords) {
+            this(new Page(pageNo, pageSize), totalPage, totalRecords);
+        }
     }
 
     public record SearchCondition(
@@ -48,6 +53,10 @@ public class MaterialController {
             String query
     ) {
 
+        @JsonCreator
+        public SearchCondition(long pageNo, long pageSize, List<String> tags, String query) {
+            this(tags, new Page(pageNo, pageSize), query);
+        }
     }
 
     public record SearchResponse(@JsonUnwrapped PageResult pageResult,
