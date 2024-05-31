@@ -33,3 +33,5 @@ build/
 .vscode/
 
 app.db
+
+jwt_key
