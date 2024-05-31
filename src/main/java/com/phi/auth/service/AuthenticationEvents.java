@@ -1,5 +1,7 @@
 package com.phi.auth.service;
 
+import com.phi.auth.dao.UserRepository;
+import com.phi.auth.dao.UserRepository.NewUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
@@ -12,14 +14,26 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AuthenticationEvents {
 
+    private final UserRepository repository;
+
+    public AuthenticationEvents(UserRepository repository) {
+        this.repository = repository;
+    }
+
     @EventListener
     public void onSuccess(AuthenticationSuccessEvent success) {
-        log.info("{}", success);
-        if (success.getSource() instanceof OAuth2LoginAuthenticationToken token) {
+        if (success.getSource() instanceof OAuth2LoginAuthenticationToken token &&
+            "github".equals(token.getClientRegistration().getRegistrationId())) {
             OAuth2User user = token.getPrincipal();
-            String githubId = user.getAttributes().get("id").toString();
-            log.info("id:{}", githubId);
-            // save to users table
+            String githubId = "gh_" + user.getAttribute("id");
+            if (!repository.existsById(githubId)) {
+                NewUser entity = new NewUser();
+                entity.setId("gh_" + githubId);
+                entity.setName(user.getAttribute("name"));
+                entity.setSource(user.getAttribute("email"));
+                repository.save(entity);
+                log.info("user:{} id:{} created", user.getName(), githubId);
+            }
         }
     }
 

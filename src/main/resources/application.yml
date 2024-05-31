@@ -4,6 +4,7 @@ spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:${DB_FILE:app.db}
+    name: "phi-material"
   security:
     user:
       name: test
