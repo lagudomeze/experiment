@@ -25,14 +25,14 @@ public class AuthenticationEvents {
         if (success.getSource() instanceof OAuth2LoginAuthenticationToken token &&
             "github".equals(token.getClientRegistration().getRegistrationId())) {
             OAuth2User user = token.getPrincipal();
-            String githubId = "gh_" + user.getAttribute("id");
-            if (!repository.existsById(githubId)) {
+            String userId = "gh_" + user.getAttribute("id");
+            if (!repository.existsById(userId)) {
                 NewUser entity = new NewUser();
-                entity.setId("gh_" + githubId);
+                entity.setId(userId);
                 entity.setName(user.getAttribute("name"));
                 entity.setSource(user.getAttribute("email"));
                 repository.save(entity);
-                log.info("user:{} id:{} created", user.getName(), githubId);
+                log.info("user:{} id:{} created", user.getName(), userId);
             }
         }
     }

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users
     id         VARCHAR(64) NOT NULL PRIMARY KEY,
     name       VARCHAR(255),
     source     VARCHAR(255),
-    created_at INTEGER     NOT NULL DEFAULT (unixepoch() * 1000)
+    created_at INTEGER     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS materials
@@ -14,14 +14,14 @@ CREATE TABLE IF NOT EXISTS materials
     creator     VARCHAR(64) NOT NULL,
     state       int         NOT NULL,
     type        int         NOT NULL,
-    created_at  INTEGER     NOT NULL DEFAULT (unixepoch() * 1000)
+    created_at  INTEGER     NOT NULL
 );
 
 CREATE TABLE material_tags
 (
     material_id VARCHAR(36)  NOT NULL,
     tag         VARCHAR(255) NOT NULL,
-    created_at  INTEGER      NOT NULL DEFAULT (unixepoch() * 1000),
+    created_at  INTEGER      NOT NULL,
     CONSTRAINT material_tags_pk PRIMARY KEY (tag, material_id)
 );
 
