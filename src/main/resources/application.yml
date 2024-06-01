@@ -6,6 +6,7 @@ spring:
     url: jdbc:sqlite:${DB_FILE:app.db}
     name: "phi-material"
   security:
+    csrf: ${CSRF_ENABLE:on}
     user:
       name: test
       password: 123456
@@ -33,6 +34,9 @@ springdoc:
     path: "/manager/swagger-ui.html"
     config-url: "/manager/v3/api-docs/swagger-config"
     url: "/manager/v3/api-docs"
+    oauth:
+      client-id: ${spring.security.oauth2.client.registration.github.client-id}
+      client-secret: ${spring.security.oauth2.client.registration.github.client-secret}
   show-login-endpoint: on
 
 logging:
