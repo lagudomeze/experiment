@@ -41,6 +41,7 @@ public class SpringDocConfig {
             PathItem path = new PathItem();
             ApiResponses responses = new ApiResponses();
             ApiResponse ok = new ApiResponse();
+            ok.setDescription("登出接口，直接清理session（cookie中的）");
             responses.addApiResponse("200", ok);
             path.get(new Operation().operationId("logout").responses(responses));
             api.path("/logout", path);

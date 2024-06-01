@@ -1,14 +1,14 @@
 openapi: 3.0.1
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 security:
-- github: []
+  - github: [ ]
 paths:
   /api/v1/materials:search:
     post:
       tags:
-      - material-controller
+        - material-controller
       operationId: search
       requestBody:
         content:
@@ -26,7 +26,7 @@ paths:
   /welcome:
     get:
       tags:
-      - welcome-controller
+        - welcome-controller
       operationId: test
       responses:
         "200":
@@ -38,7 +38,7 @@ paths:
   /manager/users:
     get:
       tags:
-      - auth-controller
+        - auth-controller
       operationId: allUsers
       responses:
         "200":
@@ -52,14 +52,14 @@ paths:
   /api/v1/materials/{id}:
     get:
       tags:
-      - material-controller
+        - material-controller
       operationId: detail
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -71,11 +71,12 @@ paths:
     get:
       operationId: logout
       responses:
-        "200": {}
+        "200":
+          description: 登出接口，直接清理session（cookie中的）
   /login:
     post:
       tags:
-      - login-endpoint
+        - login-endpoint
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -95,8 +96,8 @@ components:
   schemas:
     SearchCondition:
       required:
-      - pageNo
-      - pageSize
+        - pageNo
+        - pageSize
       type: object
       properties:
         tags:
@@ -134,10 +135,10 @@ components:
           $ref: "#/components/schemas/MaterialVideo"
     SearchResponse:
       required:
-      - pageNo
-      - pageSize
-      - records
-      - totalRecords
+        - pageNo
+        - pageSize
+        - records
+        - totalRecords
       type: object
       properties:
         pageNo:
