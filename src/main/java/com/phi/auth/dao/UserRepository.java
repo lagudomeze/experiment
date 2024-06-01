@@ -1,15 +1,16 @@
 package com.phi.auth.dao;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.repository.CrudRepository;
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends BaseMapper<User> {
 
-    class NewUser extends User implements Persistable<String> {
-
-        @Override
-        public boolean isNew() {
-            return true;
-        }
+    @InterceptorIgnore
+    default boolean existsById(String id) {
+        return exists(Wrappers
+                .lambdaQuery(User.class)
+                .eq(User::getId, id)
+        );
     }
 }

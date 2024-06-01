@@ -1,15 +1,16 @@
 package com.phi.material.dao;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.repository.CrudRepository;
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.yulichang.base.MPJBaseMapper;
 
-public interface MaterialRepository extends CrudRepository<Material, String> {
+public interface MaterialRepository extends MPJBaseMapper<Material> {
 
-    class NewMaterial extends Material implements Persistable<String> {
-
-        @Override
-        public boolean isNew() {
-            return true;
-        }
+    @InterceptorIgnore
+    default boolean existsById(String id) {
+        return exists(Wrappers
+                .lambdaQuery(Material.class)
+                .eq(Material::getId, id)
+        );
     }
 }

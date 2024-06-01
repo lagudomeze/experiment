@@ -1,7 +1,7 @@
 package com.phi.auth.service;
 
+import com.phi.auth.dao.User;
 import com.phi.auth.dao.UserRepository;
-import com.phi.auth.dao.UserRepository.NewUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
@@ -27,11 +27,11 @@ public class AuthenticationEvents {
             OAuth2User user = token.getPrincipal();
             String userId = "gh_" + user.getAttribute("id");
             if (!repository.existsById(userId)) {
-                NewUser entity = new NewUser();
+                User entity = new User();
                 entity.setId(userId);
                 entity.setName(user.getAttribute("name"));
                 entity.setSource(user.getAttribute("email"));
-                repository.save(entity);
+                repository.insert(entity);
                 log.info("user:{} id:{} created", user.getName(), userId);
             }
         }

@@ -1,28 +1,26 @@
 package com.phi.material.dao;
 
-import java.time.Instant;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
-import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.Instant;
 
 @Data
-@Table("materials")
+@TableName("materials")
 public class Material {
 
-    @Id
+    @TableId
     private String id;
     private String name;
     private String description;
-    @CreatedBy
     private String creator;
     private int state;
 
     private int type;
 
-    @CreatedDate
-    @InsertOnlyProperty
+    @TableField(updateStrategy = FieldStrategy.NEVER)
     private Instant createdAt = Instant.now();
 }

@@ -89,7 +89,7 @@ public class LocalStorage implements Storage {
     }
 
     @Override
-    public UriComponentsBuilder url(Id id, String path) {
+    public UriComponentsBuilder urlBuilder(Id id, String path) {
         return UriComponentsBuilder.fromUriString("{baseUrl}/storage/" + id.value() + "/" + path);
     }
 }
