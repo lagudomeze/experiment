@@ -23,7 +23,7 @@ phi:
   storage:
     choose: local
     local:
-      base-dir: ${LOCAL_BASE_DIR:./}
+      base-dir: ${LOCAL_BASE_DIR:store}
 
 springdoc:
   api-docs:

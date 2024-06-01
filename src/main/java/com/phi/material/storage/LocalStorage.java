@@ -51,7 +51,7 @@ public class LocalStorage implements Storage {
                 }
             }
             buffer.flip();
-            if (!buffer.hasRemaining()) {
+            if (buffer.hasRemaining()) {
                 digest.update(buffer);
             }
         } catch (IOException e) {
