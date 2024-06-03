@@ -1,4 +1,12 @@
 spring:
+  mvc:
+    async:
+      request-timeout: -1
+    static-path-pattern: /storage/**
+  web:
+    resources:
+      static-locations: file:${phi.storage.local.base-dir}
+      add-mappings: on
   application:
     name: material
   datasource:
@@ -19,11 +27,17 @@ spring:
             scope:
               - read:user
               - read:email
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
 phi:
   storage:
     choose: local
     local:
-      base-dir: ${LOCAL_BASE_DIR:store}
+      base-dir: ${LOCAL_BASE_DIR:./store}
+  ffmpeg:
+    cmd-path: ${FFMPEG_PATH:ffmpeg}
 
 springdoc:
   api-docs:
@@ -41,9 +55,9 @@ springdoc:
 
 logging:
   level:
-    org.springframework.security: debug
-    com.phi.material.dao: debug
-    com.phi.auth.dao: debug
+    org.springframework.security: info
+    com.phi.material.dao: info
+    com.phi.auth.dao: info
 
 management:
   endpoints:

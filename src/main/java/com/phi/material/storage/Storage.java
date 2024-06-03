@@ -2,6 +2,7 @@ package com.phi.material.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@SuppressWarnings("unused")
 public interface Storage {
 
     default Id digest(Resource resource) {
@@ -39,7 +41,7 @@ public interface Storage {
         }
     }
 
-    void save(Id id, String path, InputStream resource);
+    Path save(Id id, String path, InputStream resource);
 
     UriComponentsBuilder urlBuilder(Id id, String path);
 

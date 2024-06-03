@@ -12,15 +12,15 @@ import com.phi.material.dao.Material;
 import com.phi.material.dao.MaterialRepository;
 import com.phi.material.dao.MaterialTag;
 import com.phi.material.dao.MaterialTagRepository;
+import com.phi.material.ffmpeg.FfmpegService;
 import com.phi.material.storage.Storage;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.SneakyThrows;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MaterialService {
 
@@ -32,14 +32,19 @@ public class MaterialService {
 
     private final AuthService auth;
 
-    public MaterialService(MaterialRepository repository,
-                           MaterialTagRepository tagRepository,
-                           Storage storage,
-                           AuthService auth) {
+    private final FfmpegService ffmpegService;
+
+    public MaterialService(
+            MaterialRepository repository,
+            MaterialTagRepository tagRepository,
+            Storage storage,
+            AuthService auth,
+            FfmpegService ffmpegService) {
         this.repository = repository;
         this.tagRepository = tagRepository;
         this.storage = storage;
         this.auth = auth;
+        this.ffmpegService = ffmpegService;
     }
 
     private MaterialVo apply(Material material) {
@@ -49,7 +54,8 @@ public class MaterialService {
         String raw = storage.url(id, "raw");
         String thumbnail = storage.url(id, "thumbnail");
 
-        MaterialVideo video = new MaterialVideo(material.getId(), material.getName(), raw, thumbnail, material.getDescription());
+        MaterialVideo video = new MaterialVideo(material.getId(), material.getName(), raw,
+                thumbnail, material.getDescription());
 
         vo.setVideo(video);
         return vo;
@@ -78,14 +84,25 @@ public class MaterialService {
     }
 
     public DetailResponse detail(String id) {
-        return null;
+        Material material = repository.selectById(id);
+
+        Storage.Id storageId = new Storage.Id(material.getId());
+        String slice = storage.url(storageId, "slice.m3u8");
+        String slice720p = storage.url(storageId, "720p/slice.m3u8");
+        String slice1080p = storage.url(storageId, "1080p/slice.m3u8");
+
+        VideoSlices slices = new VideoSlices(slice, slice720p, slice1080p);
+        return new DetailResponse(apply(material), slices);
     }
 
-    private final ExecutorService service = Executors.newVirtualThreadPerTaskExecutor();
+    private final ExecutorService service = Executors.newFixedThreadPool(8);
 
     @SneakyThrows
-    public void save(MultipartFile file, String description, List<String> tags, SseEmitter emitter) {
+    public void save(MultipartFile file, String description, List<String> tags,
+            SseEmitter emitter) {
         String userId = auth.userId();
-        service.submit(new VideoUploadTask(userId, file, description, tags, emitter,  storage, repository, tagRepository));
+        service.submit(
+                new VideoUploadTask(userId, file, description, tags, emitter, storage, repository,
+                        tagRepository, ffmpegService));
     }
 }

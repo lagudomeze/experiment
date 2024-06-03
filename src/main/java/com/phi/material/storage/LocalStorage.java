@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
-import java.util.Iterator;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,7 +39,7 @@ public class LocalStorage implements Storage {
 
     @Override
     public Id digest(InputStream in) {
-        ByteBuffer buffer = ByteBuffer.allocate(1024 * 16);
+        ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024 * 8);
         MessageDigest digest = DIGEST_SHA3_256.get();
         digest.reset();
 
@@ -67,29 +68,43 @@ public class LocalStorage implements Storage {
 
     @Override
     public void delete(Id id) {
-        try (Stream<Path> walk = Files.walk(this.base.resolve(id.value()))) {
-            Iterator<Path> iterator = walk.iterator();
-            while (iterator.hasNext()) {
-                Files.deleteIfExists(iterator.next());
-            }
+        try {
+            Files.walkFileTree(this.base.resolve(id.value()),
+                    new SimpleFileVisitor<>() {
+                        @Override
+                        public FileVisitResult postVisitDirectory(
+                                Path dir, IOException exc) throws IOException {
+                            Files.delete(dir);
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                                throws IOException {
+                            Files.delete(file);
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void save(Id id, String name, InputStream stream) {
+    public Path save(Id id, String name, InputStream stream) {
         Path path = this.base.resolve(id.value()).resolve(name);
         try {
             Files.createDirectories(path);
             Files.copy(stream, path, StandardCopyOption.REPLACE_EXISTING);
+            return path;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
+    @SuppressWarnings("preview")
     public UriComponentsBuilder urlBuilder(Id id, String path) {
-        return UriComponentsBuilder.fromUriString("{baseUrl}/storage/" + id.value() + "/" + path);
+        return UriComponentsBuilder.fromUriString(STR."{baseUrl}/storage/\{id.value()}/\{path}");
     }
 }

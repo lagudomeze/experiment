@@ -1,6 +1,7 @@
 package com.phi.material.controller;
 
 import com.phi.material.service.MaterialService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -37,6 +37,7 @@ public class MaterialUploadController {
     }
 
 
+    @Operation
     @ApiResponse(
             responseCode = "200",
             content = @Content(schema = @Schema(anyOf = MaterialUploadEvent.class))
@@ -47,8 +48,8 @@ public class MaterialUploadController {
     )
     public SseEmitter upload(
             @RequestPart MultipartFile file,
-            @RequestParam String description,
-            @RequestParam(required = false) List<String> tags) {
+            @RequestPart String description,
+            @RequestPart(required = false) List<String> tags) {
         SseEmitter emitter = new SseEmitter();
         service.save(file, description, tags, emitter);
         return emitter;

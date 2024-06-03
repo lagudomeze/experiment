@@ -1,0 +1,15 @@
+ffmpeg -i video_main.mp4  \
+-filter:v scale=1280:-1 -g 30 -profile:v main -level 4.0 -c:v libx264 -b:v 1500k -maxrate 1500k -bufsize 2250k -start_number 0 -hls_time 1 -hls_list_size 0 -f hls \
+720p/slice.m3u8 \
+-filter:v scale=1920:-1 -g 30 -profile:v high -level 4.2 -c:v libx264 -b:v 3000k -maxrate 3000k -bufsize 4500k -start_number 0 -hls_time 1 -hls_list_size 0 -f hls \
+1080p/slice.m3u8
+
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 .\video_main.mp4
+
+ffmpeg -i video_main.mp4 -ss $random_time -frames:v 1 output.jpg
+
+#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720
+720p/slice.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=3000000,RESOLUTION=1920x1080
+1080p/slice.m3u8

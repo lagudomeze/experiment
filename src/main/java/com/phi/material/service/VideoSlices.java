@@ -1,7 +1,9 @@
 package com.phi.material.service;
 
-import java.util.List;
-
-public record VideoSlices(List<String> url) {
+public record VideoSlices(
+        String slice,
+        String slice720p,
+        String slice1080p
+) {
 
 }
