@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class FfmpegService {
 
-    @Value("${phi.ffmpeg.cmd-path}")
+    @Value("${phi.ffmpeg.cmd-ffmpeg}")
     private String ffmpeg;
+
+    @Value("${phi.ffmpeg.cmd-ffprobe}")
+    private String ffprobe;
 
     @SuppressWarnings("preview")
     private String[] cmd(Path input, Path output) {
@@ -63,7 +66,7 @@ public class FfmpegService {
 
     @SuppressWarnings("preview")
     public void thumbnail(Path input, Path output) {
-        String value = execute("ffprobe",
+        String value = execute(ffprobe,
                 "-v", "error",
                 "-show_entries", "format=duration",
                 "-of", "default=noprint_wrappers=1",

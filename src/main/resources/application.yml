@@ -37,7 +37,8 @@ phi:
     local:
       base-dir: ${LOCAL_BASE_DIR:./store}
   ffmpeg:
-    cmd-path: ${FFMPEG_PATH:ffmpeg}
+    cmd-ffmpeg: ${FFMPEG_PATH:ffmpeg}
+    cmd-ffprobe: ${FFMPEG_PATH:ffprobe}
 
 springdoc:
   api-docs:
