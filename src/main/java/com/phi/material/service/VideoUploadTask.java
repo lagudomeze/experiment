@@ -1,7 +1,7 @@
 package com.phi.material.service;
 
 import com.phi.material.MaterialConstants;
-import com.phi.material.controller.MaterialUploadController.MaterialUploadEvent;
+import com.phi.material.controller.MaterialUploadEvent;
 import com.phi.material.dao.Material;
 import com.phi.material.dao.MaterialRepository;
 import com.phi.material.dao.MaterialTag;
@@ -88,8 +88,7 @@ public record VideoUploadTask(String userId,
                     tagRepository.insert(materialTag);
                 }
             }
-            emitter.send(MaterialUploadEvent.wip(id.value(), 100));
-            log.info("save to db: {} with id {} end", file.getOriginalFilename(), id.value());
+            emitter.send(MaterialUploadEvent.ok(id.value()));
             emitter.complete();
         } catch (Exception e) {
             log.warn("Failed to upload file", e);
