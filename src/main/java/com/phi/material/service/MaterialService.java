@@ -52,7 +52,7 @@ public class MaterialService {
 
         Storage.Id id = new Storage.Id(material.getId());
         String raw = storage.url(id, "raw");
-        String thumbnail = storage.url(id, "thumbnail");
+        String thumbnail = storage.url(id, "thumbnail.jpeg");
 
         MaterialVideo video = new MaterialVideo(material.getId(), material.getName(), raw,
                 thumbnail, material.getDescription());

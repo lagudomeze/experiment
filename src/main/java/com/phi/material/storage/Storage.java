@@ -1,15 +1,14 @@
 package com.phi.material.storage;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Path;
-import java.util.Map;
-
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.util.UriComponents;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @SuppressWarnings("unused")
@@ -46,19 +45,22 @@ public interface Storage {
     UriComponentsBuilder urlBuilder(Id id, String path);
 
     default String url(Id id, String path) {
-        return urlBuilder(id, path).build(Map.of("baseUrl", baseUrl())).toString();
+        return baseUrl().resolve(urlBuilder(id, path).build().toUri()).toString();
     }
 
-    static String baseUrl() {
-        if (RequestContextHolder.currentRequestAttributes() instanceof HttpServletRequest request) {
-            UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
+    static URI baseUrl() {
+        if (RequestContextHolder.currentRequestAttributes() instanceof ServletRequestAttributes attributes
+            && attributes.getRequest() instanceof HttpServletRequest request) {
+            return UriComponentsBuilder.fromHttpUrl(
+                            UrlUtils.buildFullRequestUrl(request))
                     .replacePath(request.getContextPath())
                     .replaceQuery(null)
                     .fragment(null)
-                    .build();
-            return uriComponents.toUriString();
+                    .build()
+                    .toUri()
+                    .resolve("storage/");
         } else {
-            return "";
+            return URI.create("");
         }
     }
 }
