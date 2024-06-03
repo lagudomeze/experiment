@@ -87,6 +87,7 @@ public class MaterialController {
     public record DetailResponse(
             @JsonUnwrapped
             MaterialVo vo,
+            @JsonUnwrapped
             VideoSlices slices
     ) {
 
