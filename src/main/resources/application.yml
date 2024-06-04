@@ -2,11 +2,6 @@ spring:
   mvc:
     async:
       request-timeout: -1
-    static-path-pattern: /storage/**
-  web:
-    resources:
-      static-locations: file:${phi.storage.local.base-dir}
-      add-mappings: on
   application:
     name: material
   datasource:
@@ -32,10 +27,14 @@ spring:
       max-file-size: 1GB
       max-request-size: 1GB
 phi:
+  ui:
+    base-dir: ${UI_BASE_DIR:./ui/}
+    path-pattern: ${UI_PATH:/ui/**}
   storage:
     choose: local
     local:
-      base-dir: ${LOCAL_BASE_DIR:./store}
+      base-dir: ${LOCAL_BASE_DIR:./store/}
+      path-pattern: ${STORAGE_PATH:/storage/**}
   ffmpeg:
     cmd-ffmpeg: ${FFMPEG_PATH:ffmpeg}
     cmd-ffprobe: ${FFMPEG_PATH:ffprobe}

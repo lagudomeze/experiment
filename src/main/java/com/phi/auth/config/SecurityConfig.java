@@ -18,6 +18,12 @@ public class SecurityConfig {
     @Value("${spring.security.csrf}")
     private boolean csrfEnabled = false;
 
+    @Value("${phi.ui.path-pattern}")
+    private String uiPaths;
+
+    @Value("${phi.storage.local.path-pattern}")
+    private String storagePaths;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         if (!csrfEnabled) {
@@ -27,7 +33,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/actuator/**",
                                 "/manager/**",
-                                "/error"
+                                "/error",
+                                uiPaths,
+                                storagePaths
                         )
                         .permitAll()
                         .anyRequest()
