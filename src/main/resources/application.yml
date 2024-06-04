@@ -9,7 +9,7 @@ spring:
     url: jdbc:sqlite:${DB_FILE:app.db}
     name: "phi-material"
   security:
-    csrf: ${CSRF_ENABLE:on}
+    csrf: ${CSRF_ENABLE:off}
     user:
       name: test
       password: 123456
@@ -18,7 +18,7 @@ spring:
         registration:
           github:
             client-id: Ov23liT2qfXbByb1kPSL
-            client-secret: ${SECRET}
+            client-secret: ${SECRET:8f665beb9f075d16b4169b623448a5eb5a496b00}
             scope:
               - read:user
               - read:email

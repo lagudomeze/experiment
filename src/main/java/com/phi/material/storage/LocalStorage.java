@@ -103,8 +103,7 @@ public class LocalStorage implements Storage {
     }
 
     @Override
-    @SuppressWarnings("preview")
     public UriComponentsBuilder urlBuilder(Id id, String path) {
-        return UriComponentsBuilder.fromUriString(STR."\{id.value()}/\{path}");
+        return UriComponentsBuilder.fromUriString(id.value() + "/" + path);
     }
 }

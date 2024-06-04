@@ -39,3 +39,7 @@ jwt_key
 store
 
 ui
+
+release
+
+tmp

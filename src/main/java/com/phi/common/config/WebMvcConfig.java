@@ -28,11 +28,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String storageBaseDir;
 
     @Override
-    @SuppressWarnings("preview")
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(uiPaths)
-                .addResourceLocations(STR."file:\{uiBaseDir}");
+                .addResourceLocations("file:" + uiBaseDir);
         registry.addResourceHandler(storagePaths)
-                .addResourceLocations(STR."file:\{storageBaseDir}");
+                .addResourceLocations("file:" + storageBaseDir);
     }
 }
